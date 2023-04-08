@@ -1,5 +1,5 @@
 """
-URL configuration for tercera_entrega project.
+URL configuration for proyecto_django project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -16,10 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from tercera_entrega.views import mi_vista, mi_primer_template
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', mi_vista),
-    path('mi-primer-template/', mi_primer_template),
 ]
