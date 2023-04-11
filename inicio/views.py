@@ -3,6 +3,7 @@
 from django.http import HttpResponse
 from datetime import datetime
 from django.template import Template, Context, loader
+from django.shortcuts import render
 from inicio.models import Animal
 
 
@@ -60,3 +61,34 @@ def crear_animal(request):
     template = loader.get_template(r'crear animal')
     template_renderizado = template.render(datos)
     return HttpResponse(template_renderizado)
+
+
+def prueba_template(request):
+    datos = {
+        'nombre' : 'lionel',
+        'apellido' : 'messi',
+        'anios' : [
+            1990, 2001, 2003, 2010, 2014
+        ]
+    }
+    
+    template = loader.get_template(r'mi_primer_template.html')
+    template_renderizado = template.render(datos)
+    return HttpResponse(template_renderizado)
+
+
+
+from django.shortcuts import render, redirect
+from .forms import AnimalForm
+
+def crear_animal(request):
+    if request.method == 'POST':
+        form = AnimalForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect(crear_animal)
+    else:
+        form = AnimalForm()
+    return render(request, 'crear_animal.html', {'form':form})
+
+    
