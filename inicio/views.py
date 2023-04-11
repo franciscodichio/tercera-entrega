@@ -3,8 +3,10 @@
 from django.http import HttpResponse
 from datetime import datetime
 from django.template import Template, Context, loader
-from django.shortcuts import render
-from inicio.models import Animal
+from django.shortcuts import render, HttpResponse
+from inicio.models import Animal, persona, auto
+from inicio.forms import Animal, persona, auto 
+
 
 
 def mi_vista(request):
@@ -52,15 +54,15 @@ def index(request):
     return render(request, "index.html", {"dia": dia, "hora": hora})
 
 
-def crear_animal(request):
-    animal = Animal('Angelito', 3)
-    print(animal.nombre)
-    print(animal.edad)
-    animal.save()
-    datos = {'animal': animal}
-    template = loader.get_template(r'crear animal')
-    template_renderizado = template.render(datos)
-    return HttpResponse(template_renderizado)
+# def crear_animal(request):
+#     animal = Animal('Angelito', 3)
+#     print(animal.nombre)
+#     print(animal.edad)
+#     animal.save()
+#     datos = {'animal': animal}
+#     template = loader.get_template(r'crear animal')
+#     template_renderizado = template.render(datos)
+#     return HttpResponse(template_renderizado)
 
 
 def prueba_template(request):
@@ -84,11 +86,66 @@ from .forms import AnimalForm
 def crear_animal(request):
     if request.method == 'POST':
         form = AnimalForm(request.POST)
-    if form.is_valid():
-        form.save()
+        if form.is_valid():
+            form.save()
         return redirect(crear_animal)
     else:
         form = AnimalForm()
     return render(request, 'crear_animal.html', {'form':form})
 
+
+def persona(request):
+
+      if request.method == 'POST':
+
+            miFormulario = CursoFormulario(request.POST) #aquí mellega toda la información del html
+
+            print(miFormulario)
+
+            if miFormulario.is_valid:   #Si pasó la validación de Django
+
+                  informacion = miFormulario.cleaned_data
+
+                  curso = Curso (nombre=informacion['curso'], camada=informacion['camada']) 
+
+                  curso.save()
+
+                  return render(request, "AppCoder/inicio.html") #Vuelvo al inicio o a donde quieran
+
+      else: 
+
+            miFormulario= CursoFormulario() #Formulario vacio para construir el html
+
+      return render(request, "AppCoder/cursos.html", {"miFormulario":miFormulario})
+
+
+
+
+def auto(request):
+
+      if request.method == 'POST':
+
+            miFormulario = AutoFormulario(request.POST) #aquí mellega toda la información del html
+
+            print(miFormulario)
+
+            if miFormulario.is_valid:   #Si pasó la validación de Django
+
+                  informacion = miFormulario.cleaned_data
+
+                  auto = Auto (marca=informacion['marca'], velocidad=informacion['velocidad'],
+                   fecha_creacion=informacion['fecha_creacion'])
+                  auto.save()
+
+                  return render(request, "inicio/inicio.html") #Vuelvo al inicio o a donde quieran
+
+      else: 
+
+            miFormulario= AutoFormulario() #Formulario vacio para construir el html
+
+      return render(request, "inicio/auto.html", {"miFormulario":miFormulario})
+
     
+    
+    
+
